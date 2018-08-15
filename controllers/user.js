@@ -18,7 +18,6 @@ exports.addUser = function(req, res) {
 	console.log(req.body.password)
 	console.log(req)
 	if(req.body.password){
-		console.log('entro')
 		bcrypt.hash(req.body.password, 5, (err, hash) =>{
 			if(err) return res.status(500).send(err.message);
 			user.password = hash;
@@ -82,32 +81,40 @@ exports.findById = function(req, res) {
 
 //LOGIN
 exports.loginUser = function(req, res) {
+	console.log("loginUser")
 	var email = req.body.email;
 	var password = req.body.password;
 	var nickname = req.body.nickname;
 
+	console.log(req.body)
+
 	User.findOne({$or: [
 		{email: email},
-		{nickname: nickname}
+		{nickname: email}
 		]}, (err, user) =>{
 		if(err){
+			console.log('550:Email o contraseña incorrectos')
 			res.status(500).send({message: 'Email o contraseña incorrectos'});
 		}else{
 			if(!user){
+				console.log('!user:Email o contraseña incorrectos')
 				res.status(404).send({message: 'Email o contraseña incorrectos'});
 			}else{
 				bcrypt.compare(password, user.password, function(err,check){
 					if(check){
 						if(req.body.gethash == 'true'){
+							console.log('Entra en gethash')
 							//Devolver un token de jwt
 							res.status(200).send({
 								token: jwt.createToken(user)
 							});
 						}else{
+							console.log('Envio user')
 							res.status(200).send({user});
 						}
 					}else{
 						res.status(404).send({message: 'Email o contraseña incorrectos'});
+						console.log("Email o contraseña incorrectos")
 					}
 				});
 			}
