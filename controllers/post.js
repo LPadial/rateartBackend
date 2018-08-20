@@ -69,8 +69,8 @@ exports.deletePost = function(req, res) {
 
 //GET - Return all posts id title description and name user  in the DB
 exports.findAllPosts = function(req, res) {
-	Post.find({'user': {$ne:req.user.id}}, 'title description dateUpload', {sort: '-dateUpload'}, function (err, posts){
-		if(err) res.send(500, err.message);
+	Post.find({'user': {$ne:req.user.id}}, 'title description dateUpload', {sort: '-dateUpload',limit:20}, function (err, posts){
+		if(err) res.status(500).send(err.message);
 		res.status(200).jsonp(posts);
 	}).populate({path: 'user', select:'name -_id'});
 };
@@ -78,10 +78,9 @@ exports.findAllPosts = function(req, res) {
 //Request por el id del post que devuelve la imagen
 exports.returnImageById = function (req, res) {
 	Post.findById(req.params.id,function(err, post) {
-		if(err) res.send(500, err.message);
-		if(!post) res.send(500, {"err": "Post not found"});
-		if(!post.image) res.send(500, {"err": "Image not found"});
-		//res.status(200).jsonp(post);
+		if(err) res.status(500).send(err.message);
+		if(!post) res.status(500).send({"err": "Post not found"});
+		if(!post.image) res.status(500).send({"err": "Image not found"});
 		var file = post.image
 		console.log(post);
 
@@ -122,7 +121,7 @@ exports.countPostsByUser = function(req, res) {
 
 //GET - Return all posts of an user -> id title description and name user  in the DB
 exports.findAllPostsUser = function(req, res) {
-	Post.find({'user': req.user.id}, 'title description dateUpload', {sort: '-dateUpload'}, function (err, posts){
+	Post.find({'user': req.user.id}, 'title description dateUpload', {sort: '-dateUpload',limit:20}, function (err, posts){
 		if(err) res.send(500, err.message);
 		res.status(200).jsonp(posts);
 	}).populate({path: 'user', select:'name -_id'});

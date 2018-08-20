@@ -23,10 +23,14 @@ var post_routes = require('./routes/post');
 // Rating routes
 var rating_routes = require('./routes/rating');
 
+// Key routes
+var key_routes = require('./routes/key');
+
 //You can access to the routes with this links
 app.use('/rateart_backend', user_routes);
 app.use('/rateart_backend', post_routes);
 app.use('/rateart_backend', rating_routes);
+app.use('/rateart_backend', key_routes);
 
 //Start node server
 app.listen(3000, function() {

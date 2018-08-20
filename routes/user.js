@@ -6,7 +6,7 @@ var md_checkLogin = require('../middlewares/authenticated');
 var md_checkrole = require('../middlewares/permissions');
 
 api.route('/users')
-	.get(md_checkLogin.ensureAuth, userController.findAllUsers)
+	.get(userController.findAllUsers)
 	.post(userController.addUser);
 
 api.route('/users/:id')
